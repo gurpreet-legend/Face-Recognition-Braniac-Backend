@@ -15,7 +15,7 @@ const database = {
             id:'123',
             name: 'Mikasa',
             email: 'mikasa@gmail.com',
-            password: 'iLoveEren',
+            password: 'eren',
             enteries: 0,
             joined: new Date()
         },
@@ -23,7 +23,7 @@ const database = {
             id:'124',
             name: 'Eren',
             email: 'Shiganshina@gmail.com',
-            password: 'foundinTitan',
+            password: 'foundingTitan',
             enteries: 0,
             joined: new Date()
         }
@@ -42,7 +42,7 @@ app.get('/', (req,res) => {
     res.json(database.users);
 })
 
-app.post('/signin', async (req,res) => {
+app.post('/signin',(req,res) => {
     const user = database.users.find(user => user.email == req.body.email)
     if(user == null){
         return res.status(404).json("Cannot find user");
@@ -53,7 +53,7 @@ app.post('/signin', async (req,res) => {
     //     res.status(400).json('password / user combination does not match');
     // }
     if(req.body.email == user.email && req.body.password == user.password){
-        res.status(200).json('Success');
+        res.status(200).json('success');
     }else {
         res.status(400).json('password / user combination does not match');
     }
