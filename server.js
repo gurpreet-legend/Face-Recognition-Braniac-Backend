@@ -2,17 +2,19 @@ const express = require('express');
 const port = 3000;
 const bodyParser = require('body-parser');
 const bcrypt = require('bcrypt');
+const cors = require('cors');
 
 const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended:false}));
+app.use(cors());
 
 const database = {
     users: [
         {
             id:'123',
             name: 'Mikasa',
-            email: 'eren@gmail.com',
+            email: 'mikasa@gmail.com',
             password: 'iLoveEren',
             enteries: 0,
             joined: new Date()
@@ -37,25 +39,24 @@ const database = {
 
 
 app.get('/', (req,res) => {
-    res.send(database.users);
+    res.json(database.users);
 })
 
 app.post('/signin', async (req,res) => {
     const user = database.users.find(user => user.email == req.body.email)
     if(user == null){
-        return res.status(400).json("Cannot find user");
+        return res.status(404).json("Cannot find user");
     }
-    if(await bcrypt.compare(req.body.password, user.password)){
-        res.status(200).json('You are signed in');
-    } else {
+    // if(await bcrypt.compare(req.body.password, user.password)){
+    //     res.status(200).json('Success');
+    // } else {
+    //     res.status(400).json('password / user combination does not match');
+    // }
+    if(req.body.email == user.email && req.body.password == user.password){
+        res.status(200).json('Success');
+    }else {
         res.status(400).json('password / user combination does not match');
     }
-    // if(req.body.email == database.users[0].email && req.body.password == database.users[0].password){
-    //     console.log(req.body);
-    //     res.status(200).json('You are signed in.');
-    // }else {
-    //     res.status(400).json('Some error occured');
-    // }
 })
 
 
