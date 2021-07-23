@@ -1,6 +1,7 @@
 const express = require('express');
 const port = 3000;
 const bodyParser = require('body-parser');
+const bcrypt = require('bcrypt');
 
 const app = express();
 app.use(bodyParser.json());
@@ -24,6 +25,13 @@ const database = {
             enteries: 0,
             joined: new Date()
         }
+    ],
+    login: [
+        {
+            id:'789',
+            hash:'',
+            email:'test@gmail.com'
+        }
     ]
 }
 
@@ -32,27 +40,37 @@ app.get('/', (req,res) => {
     res.send(database.users);
 })
 
-app.post('/signin', (req,res) => {
-    if(req.body.email == database.users[0].email && req.body.password == database.users[0].password){
-        console.log(req.body);
-        res.status(200).json('You are signed in.');
-    }else {
-        res.status(400).json('Some error occured');
+app.post('/signin', async (req,res) => {
+    const user = database.users.find(user => user.email == req.body.email)
+    if(user == null){
+        return res.status(400).json("Cannot find user");
     }
+    if(await bcrypt.compare(req.body.password, user.password)){
+        res.status(200).json('You are signed in');
+    } else {
+        res.status(400).json('password / user combination does not match');
+    }
+    // if(req.body.email == database.users[0].email && req.body.password == database.users[0].password){
+    //     console.log(req.body);
+    //     res.status(200).json('You are signed in.');
+    // }else {
+    //     res.status(400).json('Some error occured');
+    // }
 })
 
 
-app.post('/register', (req,res) => {
+app.post('/register', async (req,res) => {
     const {name, email,password} = req.body;
+    let hash_password = await bcrypt.hash(password, 10);
     database.users.push({
-        id:'124',
+        id:'130',
         name: name,
         email: email,
-        password: password,
+        password: hash_password,
         enteries: 0,
         joined: new Date()
     }) 
-    res.status(200).send('Registered sucuccesfully');
+    res.status(200).send(database.users[database.users.length - 1]);
 })
 
 app.get('/profile/:id', (req,res) => {
@@ -67,13 +85,6 @@ app.get('/profile/:id', (req,res) => {
     if(!found){
         res.status(400).json('User does not exist in the database');
     }
-    // filteredUser = database.users.filter(user => user.id == id);
-    // if(filteredUser.length > 0){
-    //     res.json(filteredUser[0]);
-    // }
-    // else{
-    //     res.json('User does not exist in the database');
-    // }
 })
 
 app.post('/image', (req,res) => {
@@ -94,14 +105,5 @@ app.post('/image', (req,res) => {
 
 
 app.listen(port, () => {
-    console.log(`Server is running at port ${port}`);
+    console.log(`Server is running at http://localhost:${port}`);
 })
-
-//Structuring :
-/*
-/ --> res = this is working
-/signin --> POST = sucess/fail
-/register --> POST = user
-/profile/:userID = --> GET =user
-/image --> PUT --> user
-*/
