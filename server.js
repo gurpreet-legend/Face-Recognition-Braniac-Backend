@@ -57,21 +57,25 @@ app.get('/', (req,res) => {
     res.json(database.users);
 })
 
-app.post('/signin',(req,res) => {
-    const user = database.users.find(user => user.email == req.body.email)
-    if(user == null){
-        return res.status(404).json("Cannot find user");
-    }
-    // if(await bcrypt.compare(req.body.password, user.password)){
-    //     res.status(200).json('Success');
-    // } else {
-    //     res.status(400).json('password / user combination does not match');
-    // }
-    if(req.body.email == user.email && req.body.password == user.password){
-        res.status(200).json(user);
-    }else {
-        res.status(400).json('password / user combination does not match');
-    }
+app.post('/signin', (req,res) => {
+    const {email, password} = req.body;
+    db.select('email', 'hash').from('login')
+        .where({email: email})
+        .then(async (userInfo) => {
+            const isValid = await bcrypt.compare(password, userInfo[0].hash);
+            if(isValid){
+                return db.select('*').from('users')
+                .where({email: email})
+                .then(user => {
+                    res.status(200).json(user[0])
+                })
+                .catch(err => res.status(400).json('Unable to get user !'))
+            }
+            else {
+                res.status(400).json('Wrong credentials');
+            }
+        })
+        .catch(err => res.status(400).json('Wrong credentials'));
 })
 
 
