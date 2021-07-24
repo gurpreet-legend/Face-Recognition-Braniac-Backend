@@ -3,6 +3,21 @@ const port = 3000;
 const bodyParser = require('body-parser');
 const bcrypt = require('bcrypt');
 const cors = require('cors');
+const knex = require('knex');
+
+const db = knex({
+    client: 'pg',
+    connection: {
+      host : '127.0.0.1',
+      user : 'losty',
+      password : 'lostworld2701',
+      database : 'brainiacDB'
+    }
+});
+
+db.select('*').from('users').then(data => {
+    console.log(data)
+});
 
 const app = express();
 app.use(bodyParser.json());
@@ -53,7 +68,7 @@ app.post('/signin',(req,res) => {
     //     res.status(400).json('password / user combination does not match');
     // }
     if(req.body.email == user.email && req.body.password == user.password){
-        res.status(200).json('success');
+        res.status(200).json(user);
     }else {
         res.status(400).json('password / user combination does not match');
     }
@@ -88,7 +103,7 @@ app.get('/profile/:id', (req,res) => {
     }
 })
 
-app.post('/image', (req,res) => {
+app.put('/image', (req,res) => {
     const {id} = req.body;
     let found = false;
     database.users.forEach(user =>{
