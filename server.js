@@ -78,44 +78,63 @@ app.post('/signin',(req,res) => {
 app.post('/register', async (req,res) => {
     const {name, email,password} = req.body;
     let hash_password = await bcrypt.hash(password, 10);
-    database.users.push({
-        id:'130',
-        name: name,
-        email: email,
-        password: hash_password,
-        enteries: 0,
-        joined: new Date()
+    //Implementing transactions concept for Login and User DB
+    db.transaction(trx => {
+        trx.insert({
+            hash: hash_password, 
+            email: email
+        })
+        .into('login')
+        .returning('email')
+        .then(loginEmail => {
+            db('users')
+                .returning('*')
+                .insert({
+                    name: name,
+                    email: loginEmail[0],
+                    joined: new Date()
+                })
+                .then(user => {
+                    res.status(200).json(user[0]); 
+                })
+                .catch(err => res.status(400).json("Unable to register"))
+        })
+        .then(trx.commit)
+        .catch(trx.rollback)
     }) 
-    res.status(200).send(database.users[database.users.length - 1]);
 })
 
 app.get('/profile/:id', (req,res) => {
     const {id} = req.params;
-    let found = false;
-    database.users.forEach(user =>{
-        if(user.id == id){
-            found = true
-            return res.status(200).json(user);
+    db.select('*').from('users').where({
+        id: id
+    })
+    .then(user => {
+        if(user.length > 0)  //We check here for length greater than 0, as otherwise it returns an empty array
+        { 
+            res.status(200).json(user[0]);
         }
-    });
-    if(!found){
-        res.status(400).json('User does not exist in the database');
-    }
+        else{
+            res.status(404).json("User does not exist in the database !")
+        }
+    })
+    .catch(err => res.status(404).json("Error founding user !"))
 })
 
 app.put('/image', (req,res) => {
     const {id} = req.body;
-    let found = false;
-    database.users.forEach(user =>{
-        if(user.id == id){
-            found = true;
-            user.enteries++;
-            return res.json(user.enteries);
+    db.select('*').from('users').where('id', '=', id)
+    .increment('enteries', 1)
+    .returning('enteries')
+    .then(enteries => {
+        if(enteries.length > 0) {
+            res.status(200).json(enteries[0]);
         }
-    });
-    if(!found){
-        res.json('User does not exist in the database');
-    }
+        else{
+            res.json('Unable to get entries');
+        }
+    })
+    .catch(err => res.status(404).json("Error founding entries !"))
 })
 
 
