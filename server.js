@@ -1,5 +1,4 @@
 const express = require('express');
-const port = 3000;
 const bodyParser = require('body-parser');
 const bcrypt = require('bcrypt');
 const cors = require('cors');
@@ -35,6 +34,6 @@ app.post('/imageurl', (req,res) => {image.handleApiCall(req, res)})
 
 
 
-app.listen(port, () => {
-    console.log(`Server is running at http://localhost:${port}`);
+app.listen(process.env.PORT || 3000, () => {
+    console.log(`Server is running at http://localhost:${process.env.PORT}`);
 })
