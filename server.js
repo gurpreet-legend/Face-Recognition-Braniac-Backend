@@ -12,10 +12,13 @@ const image = require('./controllers/image');
 const db = knex({
     client: 'pg',
     connection: {
-      host : 'postgresql-shallow-85056',
-      user : 'losty',
-      password : '',
-      database : 'brainiacDB'
+      host : process.env.DATABASE_URL,
+      ssl: {
+        rejectUnauthorized: false
+      }
+      // user : 'losty',
+      // password : '',
+      // database : 'brainiacDB'
     }
 });
 
