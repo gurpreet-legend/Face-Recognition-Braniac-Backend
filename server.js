@@ -1,7 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const bcrypt = require('bcrypt');
-const cors = require('cors');
+// const cors = require('cors');
 const knex = require('knex');
 const register = require('./controllers/register');
 const signin = require('./controllers/signin');
@@ -23,8 +23,7 @@ const db = knex({
 const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended:false}));
-app.use(cors());
-
+// app.use(cors());
 
 app.get('/', (req,res) => res.json('Server is working.'))
 app.post('/signin', (req, res) => {signin.handleSignIn(req, res, db, bcrypt)})
