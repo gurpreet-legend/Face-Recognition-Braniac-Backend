@@ -17,9 +17,6 @@ const db = knex({
       ssl: {
         rejectUnauthorized: false
       }
-      // user : 'losty',
-      // password : '',
-      // database : 'brainiacDB'
     }
 });
 
