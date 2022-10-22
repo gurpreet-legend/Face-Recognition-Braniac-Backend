@@ -28,14 +28,5 @@
     "eslint-plugin-n": "^15.3.0",
     "eslint-plugin-promise": "^6.1.1",
     "nodemon": "^2.0.12"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/ThanushaMandala/Face-Recognition-Braniac-Backend.git"
-  },
-  "keywords": [],
-  "bugs": {
-    "url": "https://github.com/ThanushaMandala/Face-Recognition-Braniac-Backend/issues"
-  },
-  "homepage": "https://github.com/ThanushaMandala/Face-Recognition-Braniac-Backend#readme"
+  }
 }
