@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "check-formatting": "npx prettier --check .",
+    "format": "npx prettier --write ."
   },
   "author": "",
   "license": "ISC",
@@ -20,6 +22,7 @@
     "pg": "^8.6.0"
   },
   "devDependencies": {
-    "nodemon": "^2.0.12"
+    "nodemon": "^2.0.12",
+    "prettier": "^2.7.1"
   }
 }
