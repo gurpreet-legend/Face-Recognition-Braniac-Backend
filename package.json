@@ -1,10 +1,12 @@
 {
   "name": "face-detection-braniac-backend",
   "version": "1.0.0",
-  "description": "",
+  "description": "> This is the backend architecture for my Brainiac app, for more details go to this [link](https://github.com/gurpreet-legend/Face-Recognition-Brainiac-Frontend)",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js",
+    "lint:fix": "eslint --fix ./*.js"
     "check-formatting": "npx prettier --check .",
     "format": "npx prettier --write ."
   },
@@ -22,7 +24,12 @@
     "pg": "^8.6.0"
   },
   "devDependencies": {
-    "nodemon": "^2.0.12",
+    "eslint": "^8.26.0",
+    "eslint-config-standard": "^17.0.0",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-n": "^15.3.0",
+    "eslint-plugin-promise": "^6.1.1",
+    "nodemon": "^2.0.12"
     "prettier": "^2.7.1"
   }
 }
