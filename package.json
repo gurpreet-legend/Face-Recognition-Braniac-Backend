@@ -7,6 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js",
     "lint:fix": "eslint --fix ./*.js"
+    "check-formatting": "npx prettier --check .",
+    "format": "npx prettier --write ."
   },
   "author": "",
   "license": "ISC",
@@ -28,5 +30,6 @@
     "eslint-plugin-n": "^15.3.0",
     "eslint-plugin-promise": "^6.1.1",
     "nodemon": "^2.0.12"
+    "prettier": "^2.7.1"
   }
 }
